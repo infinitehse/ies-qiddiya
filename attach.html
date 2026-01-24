@@ -111,26 +111,32 @@ input[type="text"]:focus{
   border-color:var(--accent);
 }
 
-button{
-  width:100%;
-  padding:14px;
-  background:var(--primary);
-  color:#fff;
-  border:none;
-  border-radius:10px;
-  font-size:16px;
-  font-weight:600;
-  cursor:pointer;
-  transition:.3s;
+/* Primary action button – shared system style */
+button {
+  margin-top: 28px;
+  padding: 15px;
+  width: 100%;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform 0.2s ease,
+              box-shadow 0.2s ease,
+              opacity 0.2s;
 }
 
-button:hover{
-  background:var(--secondary);
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.12);
 }
 
-button:disabled{
-  background:#999;
-  cursor:not-allowed;
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 .message{
