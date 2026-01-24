@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qiddiya Resort Core District</title>
+<style>
+  /* Brand Colors & Typography */
+  :root {
+    --primary: #294145;
+    --secondary: #5D855E;
+    --text: #294145;
+    --accent: #86B85E;
+    --light-bg: #F9F9F9;
+    --dark-bg: #E6F0DE;
+    --white: #FFFFFF;
+    --gray: #666666;
+    --font: 'Oswald', sans-serif;
+  }
+
+  body, html {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font);
+    color: var(--text);
+    background: linear-gradient(135deg, var(--light-bg) 0%, var(--dark-bg) 100%);
+    height: 100%;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+  }
+
+  header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 20px;
+  }
+
+  header img {
+    width: 120px;
+    height: auto;
+  }
+
+  h1 {
+    text-align: center;
+    color: var(--primary);
+    font-size: 2.5rem;
+    margin: 40px 0 10px;
+  }
+
+  h2 {
+    text-align: center;
+    color: var(--secondary);
+    font-size: 1.2rem;
+    margin-bottom: 50px;
+  }
+
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+  }
+
+  .card {
+    background: var(--white);
+    width: 250px;
+    height: 250px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: var(--primary);
+    font-weight: bold;
+    font-size: 1.1rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .card svg {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 20px;
+    fill: var(--accent);
+  }
+
+  .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+  }
+
+  .card.disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    color: #fff;
+  }
+
+  .card.disabled svg {
+    fill: #fff;
+  }
+
+  /* Responsive */
+  @media(max-width:900px) {
+    .grid {
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+    }
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <img src="" alt="Logo"> <!-- Add your logo here -->
+</header>
+
+<div class="container">
+  <h1>Qiddiya Resort Core District</h1>
+  <h2>Weekly Site Environmental Inspection</h2>
+
+  <div class="grid">
+    <!-- Button 1: Site Report -->
+    <a href="INSPECTION_FORM_URL" class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 3h16v2H4V3zm0 4h16v2H4V7zm0 4h16v2H4v-2zm0 4h16v2H4v-2zm0 4h16v2H4v-2z"/></svg>
+      Site Report
+    </a>
+
+    <!-- Button 2: Attach Link -->
+    <a href="ATTACH_REPORT_URL" class="card">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.59 13.41L5.17 12l6-6 6 6-1.41 1.41L12 8.83l-5.41 5.58z"/></svg>
+      Attach Link
+    </a>
+
+    <!-- Button 3: Dashboard (grayed out) -->
+    <div class="card disabled">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8v-10h-8v10zm0-18v6h8V3h-8z"/></svg>
+      Dashboard
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
