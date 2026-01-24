@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attach Report</title>
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --primary:#294145;
+  --secondary:#5D855E;
+  --accent:#86B85E;
+  --soft:#E6F0DE;
+  --light:#F9F9F9;
+  --text:#294145;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  font-family:"Oswald",sans-serif;
+  background:linear-gradient(135deg,var(--soft),#ffffff);
+  padding:20px;
+  color:var(--text);
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  background:#fff;
+  padding:25px;
+  border-radius:14px;
+  box-shadow:0 12px 30px rgba(0,0,0,.08);
+}
+
+.header{
+  display:flex;
+  justify-content:flex-end;
+  margin-bottom:10px;
+}
+
+.header img{
+  width:110px;
+}
+
+h2{
+  text-align:center;
+  font-weight:600;
+  margin-bottom:20px;
+  color:var(--primary);
+}
+
+.table-wrap{
+  overflow-x:auto;
+  margin-bottom:20px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:var(--light);
+  border-radius:10px;
+  overflow:hidden;
+}
+
+th,td{
+  padding:10px;
+  font-size:14px;
+  text-align:center;
+}
+
+th{
+  background:var(--primary);
+  color:#fff;
+  font-weight:500;
+}
+
+tr:nth-child(even){
+  background:#fff;
+}
+
+tr:hover{
+  background:var(--soft);
+}
+
+input[type="radio"]{
+  transform:scale(1.2);
+  cursor:pointer;
+}
+
+label{
+  font-weight:500;
+  display:block;
+  margin-bottom:6px;
+}
+
+input[type="text"]{
+  width:100%;
+  padding:12px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:14px;
+  margin-bottom:15px;
+}
+
+input[type="text"]:focus{
+  outline:none;
+  border-color:var(--accent);
+}
+
+button{
+  width:100%;
+  padding:14px;
+  background:var(--primary);
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+  transition:.3s;
+}
+
+button:hover{
+  background:var(--secondary);
+}
+
+button:disabled{
+  background:#999;
+  cursor:not-allowed;
+}
+
+.message{
+  margin-top:12px;
+  font-weight:500;
+  text-align:center;
+}
+
+@media(max-width:600px){
+  th,td{font-size:12px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- Logo -->
+  <div class="header">
+    <img src="https://infinitehse.com/wp-content/uploads/2026/01/IES_logo_with_Qiddiya-removebg.png" alt="Logo">
+  </div>
+
+  <h2>Attach Report to Inspection Record</h2>
+
+  <div class="table-wrap" id="tableContainer">Loading...</div>
+
+  <label for="linkInput">Google Drive Report Link</label>
+  <input type="text" id="linkInput" placeholder="https://drive.google.com/..." required>
+
+  <button id="submitBtn">Attach Report</button>
+  <div class="message" id="formMessage"></div>
+
+</div>
+
+<script>
+const webAppUrl =
+"https://script.google.com/macros/s/AKfycbx9WHp8EkBGkwwFfCF32sSF-ig2gP7KJWqJtSZSrY8h-RYLGZSTjoNOV7U5JTtvB-dJWA/exec";
+
+// Load last 3 rows
+async function loadTable(){
+  const res = await fetch(webAppUrl);
+  const data = await res.json();
+
+  let html = `<table><tr><th>Select</th>`;
+  const headers = Object.keys(data[0]).filter(h => h !== "rowIndex");
+  headers.forEach(h => html += `<th>${h}</th>`);
+  html += `</tr>`;
+
+  data.forEach((row,i)=>{
+    html += `<tr>
+      <td><input type="radio" name="selectedRow" value="${row.rowIndex}" ${i===0?'checked':''}></td>`;
+    headers.forEach(h => html += `<td>${row[h]}</td>`);
+    html += `</tr>`;
+  });
+
+  html += `</table>`;
+  document.getElementById("tableContainer").innerHTML = html;
+}
+
+loadTable();
+
+// Attach link
+document.getElementById("submitBtn").addEventListener("click", async()=>{
+  const selected = document.querySelector('input[name="selectedRow"]:checked');
+  const link = document.getElementById("linkInput").value.trim();
+  const msg = document.getElementById("formMessage");
+  const btn = document.getElementById("submitBtn");
+
+  if(!selected || !link){
+    msg.style.color="red";
+    msg.innerText="Please select a row and paste the report link.";
+    return;
+  }
+
+  btn.disabled=true;
+  btn.innerText="Attaching...";
+
+  try{
+    const res = await fetch(webAppUrl,{
+      method:"POST",
+      body:JSON.stringify({rowIndex:selected.value, link})
+    });
+    const result = await res.json();
+
+    if(result.result==="success"){
+      msg.style.color="green";
+      msg.innerText="✅ Report attached successfully.";
+      document.getElementById("linkInput").value="";
+      loadTable();
+    }else{
+      msg.style.color="red";
+      msg.innerText="❌ Failed to attach report.";
+    }
+  }catch{
+    msg.style.color="red";
+    msg.innerText="❌ Connection error.";
+  }
+
+  btn.disabled=false;
+  btn.innerText="Attach Report";
+});
+</script>
+
+</body>
+</html>
