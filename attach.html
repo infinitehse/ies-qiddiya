@@ -179,7 +179,8 @@ const webAppUrl =
 // Load last 3 rows
 async function loadTable(){
   const res = await fetch(webAppUrl);
-  const data = await res.json();
+  const text = await res.text();
+  const data = JSON.parse(text);
 
   let html = `<table><tr><th>Select</th>`;
   const headers = Object.keys(data[0]).filter(h => h !== "rowIndex");
@@ -220,7 +221,8 @@ document.getElementById("submitBtn").addEventListener("click", async()=>{
       method:"POST",
       body:JSON.stringify({rowIndex:selected.value, link})
     });
-    const result = await res.json();
+    const text = await res.text();
+    const result = JSON.parse(text);
 
     if(result.result==="success"){
       msg.style.color="green";
