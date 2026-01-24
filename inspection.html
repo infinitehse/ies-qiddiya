@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -181,3 +184,151 @@ button:disabled {
 }
 </style>
 </head>
+  
+<body>
+
+<div class="container">
+  <!-- Logo on top right -->
+  <div class="header">
+    <img src="https://infinitehse.com/wp-content/uploads/2026/01/IES_logo_with_Qiddiya-removebg.png" alt="Logo Placeholder">
+  </div>
+
+  <!-- Title in the middle -->
+  <div class="titles">
+    <div class="title">Qiddiya Resort Core District</div>
+    <div class="subtitle">Weekly Site Environmental Inspection</div>
+  </div>
+
+  <div class="info" id="locationInfo">Detecting location...</div>
+
+  <form id="inspectionForm">
+    <input type="hidden" id="point" name="point">
+    <input type="hidden" id="lat" name="lat">
+    <input type="hidden" id="lng" name="lng">
+
+    <div class="section">
+      <div class="section-title">Noise Levels (dB)</div>
+      <label>LA<sub>eq</sub> <input type="number" step="0.1" id="LAeq" required></label>
+      <label>LA<sub>90</sub> <input type="number" step="0.1" id="LA90" required></label>
+      <label>LA<sub>10</sub> <input type="number" step="0.1" id="LA10" required></label>
+      <label>LA<sub>max</sub> <input type="number" step="0.1" id="LAmax" required></label>
+      <label>LA<sub>min</sub> <input type="number" step="0.1" id="LAmin" required></label>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Air Quality (µg/m³)</div>
+      <label>PM<sub>10</sub> <input type="number" step="0.1" id="PM10" required></label>
+      <label>PM<sub>2.5</sub> <input type="number" step="0.1" id="PM25" required></label>
+    </div>
+
+    <button type="submit" id="submitBtn">Submit</button>
+    <div class="message" id="formMessage"></div>
+  </form>
+</div>
+
+<script>
+const points = [
+  {id: "Point #1", lat: 24.57575, lng: 46.31689},
+  {id: "Point #2", lat: 24.57753, lng: 46.32825},
+  {id: "Point #3", lat: 24.58586, lng: 46.33322},
+  {id: "Point #4", lat: 24.58583, lng: 46.33642},
+  {id: "Point #5", lat: 24.59058, lng: 46.34292},
+  {id: "Point #6", lat: 24.59225, lng: 46.33586},
+  {id: "Point #7", lat: 24.59092, lng: 46.32689},
+  {id: "Point #8", lat: 24.58947, lng: 46.32022},
+  {id: "Point #9", lat: 24.58919, lng: 46.31094},
+  {id: "Point #10", lat: 24.57600, lng: 46.27450}
+];
+
+// Haversine formula
+function getDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371000;
+  const φ1 = lat1 * Math.PI/180;
+  const φ2 = lat2 * Math.PI/180;
+  const Δφ = (lat2-lat1) * Math.PI/180;
+  const Δλ = (lon2-lon1) * Math.PI/180;
+  const a = Math.sin(Δφ/2)**2 + Math.cos(φ1)*Math.cos(φ2)*Math.sin(Δλ/2)**2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
+
+function detectPoint(lat, lng) {
+  for (let p of points) {
+    if (getDistance(lat, lng, p.lat, p.lng) <= 10) {
+      return p;
+    }
+  }
+  return null;
+}
+
+// Detect location
+navigator.geolocation.getCurrentPosition(
+  (pos) => {
+    const lat = pos.coords.latitude;
+    const lng = pos.coords.longitude;
+
+    document.getElementById("lat").value = lat;
+    document.getElementById("lng").value = lng;
+
+    const detectedPoint = detectPoint(lat, lng);
+    document.getElementById("point").value = detectedPoint ? detectedPoint.id : "Unknown Point";
+
+    document.getElementById("locationInfo").innerText = detectedPoint 
+      ? `${detectedPoint.id} detected at (${detectedPoint.lat}, ${detectedPoint.lng})`
+      : `Unknown Point detected at (${lat.toFixed(5)}, ${lng.toFixed(5)})`;
+  },
+  () => {
+    document.getElementById("point").value = "Unknown Point";
+    document.getElementById("lat").value = 0;
+    document.getElementById("lng").value = 0;
+    document.getElementById("locationInfo").innerText = "Location not available.";
+  }
+);
+
+// Form submission
+document.getElementById("inspectionForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const submitBtn = document.getElementById("submitBtn");
+  const message = document.getElementById("formMessage");
+
+  submitBtn.disabled = true;
+  submitBtn.innerText = "Sending...";
+
+  const data = {
+    point: document.getElementById("point").value,
+    lat: document.getElementById("lat").value,
+    lng: document.getElementById("lng").value,
+    LAeq: document.getElementById("LAeq").value,
+    LA90: document.getElementById("LA90").value,
+    LA10: document.getElementById("LA10").value,
+    LAmax: document.getElementById("LAmax").value,
+    LAmin: document.getElementById("LAmin").value,
+    PM10: document.getElementById("PM10").value,
+    PM25: document.getElementById("PM25").value
+  };
+
+  try {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbw_BboAEESwnwikl7KQTM04nJLQUEv18WUHoQVv-v-COwklaf0um5Ekgz6YxZ4d48bhtw/exec", {
+      method: "POST",
+      body: JSON.stringify(data)
+    });
+    const result = await response.json();
+    if (result.result === "success") {
+      message.style.color = "#0E3B32";
+      message.innerText = "✅ Data submitted successfully!";
+      document.getElementById("inspectionForm").reset();
+    } else {
+      message.style.color = "red";
+      message.innerText = "❌ Submission failed!";
+    }
+  } catch (err) {
+    message.style.color = "red";
+    message.innerText = "❌ Error connecting to server.";
+  }
+
+  submitBtn.disabled = false;
+  submitBtn.innerText = "Submit";
+});
+</script>
+</body>
+</html>
