@@ -195,6 +195,12 @@ button:disabled {
       <input type="url" id="pmLink" name="pmLink" placeholder="https://docs.google.com/..." required>
     </div>
 
+    <div class="section">
+      <div class="section-title">Mobile Lab</div>
+      <label for="mobileLink">Enter Mobile Lab Report Link</label>
+      <input type="url" id="mobileLink" name="mobileLink" placeholder="https://docs.google.com/..." required>
+    </div>
+    
     <button type="submit">Submit</button>
     <div class="message" id="formMessage"></div>
   </form>
@@ -228,6 +234,7 @@ document.getElementById("linkForm").addEventListener("submit", async function(e)
     date: dateInput.value,
     noiseLink: document.getElementById("noiseLink").value,
     pmLink: document.getElementById("pmLink").value
+    mobileLink: document.getElementById("mobileLink").value
   };
 
   try {
