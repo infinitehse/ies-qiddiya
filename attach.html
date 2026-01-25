@@ -9,6 +9,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
+.footer {
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: 1px solid #eee;
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 300;
+}
+
+.footer a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 400;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+  
 :root {
   --primary: #294145;
   --secondary: #5D855E;
@@ -211,7 +231,12 @@ button:disabled {
     <div class="message" id="formMessage"></div>
   </form>
 </div>
-
+<div class="footer">
+  This solution was developed by
+  <a href="https://infinitehse.com/" target="_blank" rel="noopener">
+    Infinite HSE
+  </a>
+</div>
 <script>
 // Prefill date with today
 const dateInput = document.getElementById("date");
