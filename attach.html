@@ -209,9 +209,15 @@ button:disabled {
 <script>
 document.getElementById("linkForm").addEventListener("submit", async function(e){
   e.preventDefault();
+
   const message = document.getElementById("formMessage");
-  message.style.color = var("--primary");
+  const submitBtn = this.querySelector("button");
+
+  // Show sending state
+  message.style.color = "#294145";  // brand primary
   message.innerText = "Sending...";
+  submitBtn.disabled = true;
+  submitBtn.innerText = "Sending...";
 
   const data = {
     date: document.getElementById("date").value,
@@ -225,19 +231,24 @@ document.getElementById("linkForm").addEventListener("submit", async function(e)
     });
 
     const result = await response.json();
+
     if(result.result === "success"){
       message.style.color = "#0E3B32";
       message.innerText = "✅ Submitted successfully!";
       document.getElementById("linkForm").reset();
     } else {
       message.style.color = "red";
-      message.innerText = "❌ Submission failed: " + result.message;
+      message.innerText = "❌ Submission failed: " + (result.message || "");
     }
 
   } catch(err) {
     message.style.color = "red";
     message.innerText = "❌ Error connecting to server.";
   }
+
+  // Reset button
+  submitBtn.disabled = false;
+  submitBtn.innerText = "Submit";
 });
 </script>
 
