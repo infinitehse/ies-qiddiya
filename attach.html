@@ -3,243 +3,65 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Attach Report</title>
-
-<!-- Google Font -->
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
-
+<title>Attach weekly report</title>
 <style>
-:root{
-  --primary:#294145;
-  --secondary:#5D855E;
-  --accent:#86B85E;
-  --soft:#E6F0DE;
-  --light:#F9F9F9;
-  --text:#294145;
-}
-
-*{box-sizing:border-box;margin:0;padding:0}
-
-body{
-  font-family:"Oswald",sans-serif;
-  background:linear-gradient(135deg,var(--soft),#ffffff);
-  padding:20px;
-  color:var(--text);
-}
-
-.container{
-  max-width:900px;
-  margin:auto;
-  background:#fff;
-  padding:25px;
-  border-radius:14px;
-  box-shadow:0 12px 30px rgba(0,0,0,.08);
-}
-
-.header{
-  display:flex;
-  justify-content:flex-end;
-  margin-bottom:10px;
-}
-
-.header img{
-  width:110px;
-}
-
-h2{
-  text-align:center;
-  font-weight:600;
-  margin-bottom:20px;
-  color:var(--primary);
-}
-
-.table-wrap{
-  overflow-x:auto;
-  margin-bottom:20px;
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  background:var(--light);
-  border-radius:10px;
-  overflow:hidden;
-}
-
-th,td{
-  padding:10px;
-  font-size:14px;
-  text-align:center;
-}
-
-th{
-  background:var(--primary);
-  color:#fff;
-  font-weight:500;
-}
-
-tr:nth-child(even){
-  background:#fff;
-}
-
-tr:hover{
-  background:var(--soft);
-}
-
-input[type="radio"]{
-  transform:scale(1.2);
-  cursor:pointer;
-}
-
-label{
-  font-weight:500;
-  display:block;
-  margin-bottom:6px;
-}
-
-input[type="text"]{
-  width:100%;
-  padding:12px;
-  border-radius:8px;
-  border:1px solid #ccc;
-  font-size:14px;
-  margin-bottom:15px;
-}
-
-input[type="text"]:focus{
-  outline:none;
-  border-color:var(--accent);
-}
-
-/* Primary action button – shared system style */
-button {
-  margin-top: 28px;
-  padding: 15px;
-  width: 100%;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  color: #FFFFFF;
-  font-size: 16px;
-  font-weight: 500;
-  border: none;
-  border-radius: 14px;
-  cursor: pointer;
-  transition: transform 0.2s ease,
-              box-shadow 0.2s ease,
-              opacity 0.2s;
-}
-
-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.12);
-}
-
-button:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-.message{
-  margin-top:12px;
-  font-weight:500;
-  text-align:center;
-}
-
-@media(max-width:600px){
-  th,td{font-size:12px}
-}
+body { font-family: Arial, sans-serif; padding: 30px; background: #f4f4f4; }
+.container { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+label { display: block; margin-bottom: 10px; font-weight: bold; }
+input { width: 100%; padding: 10px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ccc; }
+button { padding: 12px; width: 100%; background: #294145; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; }
+button:hover { background: #5D855E; }
+.message { margin-top: 10px; font-weight: bold; }
 </style>
 </head>
-
 <body>
 
 <div class="container">
+  <h2>Attach weekly report</h2>
+  <form id="linkForm">
+    <label for="date">Date & Time</label>
+    <input type="datetime-local" id="date" name="date" required>
 
-  <!-- Logo -->
-  <div class="header">
-    <img src="https://infinitehse.com/wp-content/uploads/2026/01/IES_logo_with_Qiddiya-removebg.png" alt="Logo">
-  </div>
+    <label for="link">Link</label>
+    <input type="url" id="link" name="link" placeholder="https://docs.google.com/..." required>
 
-  <h2>Attach Report to Inspection Record</h2>
-
-  <div class="table-wrap" id="tableContainer">Loading...</div>
-
-  <label for="linkInput">Google Drive Report Link</label>
-  <input type="text" id="linkInput" placeholder="https://drive.google.com/..." required>
-
-  <button id="submitBtn">Attach Report</button>
-  <div class="message" id="formMessage"></div>
-
+    <button type="submit">Submit</button>
+    <div class="message" id="formMessage"></div>
+  </form>
 </div>
 
 <script>
-const webAppUrl =
-"https://script.google.com/macros/s/AKfycbw_BboAEESwnwikl7KQTM04nJLQUEv18WUHoQVv-v-COwklaf0um5Ekgz6YxZ4d48bhtw/exec";
+document.getElementById("linkForm").addEventListener("submit", async function(e){
+  e.preventDefault();
+  const message = document.getElementById("formMessage");
+  message.style.color = "#294145";
+  message.innerText = "Sending...";
 
-// Load last 3 rows
-async function loadTable(){
-  const res = await fetch(webAppUrl);
-  const text = await res.text();
-  const data = JSON.parse(text);
+  const data = {
+    date: document.getElementById("date").value,
+    link: document.getElementById("link").value
+  };
 
-  let html = `<table><tr><th>Select</th>`;
-  const headers = Object.keys(data[0]).filter(h => h !== "rowIndex");
-  headers.forEach(h => html += `<th>${h}</th>`);
-  html += `</tr>`;
-
-  data.forEach((row,i)=>{
-    html += `<tr>
-      <td><input type="radio" name="selectedRow" value="${row.rowIndex}" ${i===0?'checked':''}></td>`;
-    headers.forEach(h => html += `<td>${row[h]}</td>`);
-    html += `</tr>`;
-  });
-
-  html += `</table>`;
-  document.getElementById("tableContainer").innerHTML = html;
-}
-
-loadTable();
-
-// Attach link
-document.getElementById("submitBtn").addEventListener("click", async()=>{
-  const selected = document.querySelector('input[name="selectedRow"]:checked');
-  const link = document.getElementById("linkInput").value.trim();
-  const msg = document.getElementById("formMessage");
-  const btn = document.getElementById("submitBtn");
-
-  if(!selected || !link){
-    msg.style.color="red";
-    msg.innerText="Please select a row and paste the report link.";
-    return;
-  }
-
-  btn.disabled=true;
-  btn.innerText="Attaching...";
-
-  try{
-    const res = await fetch(webAppUrl,{
-      method:"POST",
-      body:JSON.stringify({rowIndex:selected.value, link})
+  try {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbypxL3ZLjDrsIepljK6VB9y2PfX_jP_ko44Shif1FJXrvM_uQm4B0eJ-84gLAKdb2rFBQ/exec", {
+      method: "POST",
+      body: JSON.stringify(data)
     });
-    const text = await res.text();
-    const result = JSON.parse(text);
 
-    if(result.result==="success"){
-      msg.style.color="green";
-      msg.innerText="✅ Report attached successfully.";
-      document.getElementById("linkInput").value="";
-      loadTable();
-    }else{
-      msg.style.color="red";
-      msg.innerText="❌ Failed to attach report.";
+    const result = await response.json();
+    if(result.result === "success"){
+      message.style.color = "green";
+      message.innerText = "✅ Submitted successfully!";
+      document.getElementById("linkForm").reset();
+    } else {
+      message.style.color = "red";
+      message.innerText = "❌ Submission failed: " + result.message;
     }
-  }catch{
-    msg.style.color="red";
-    msg.innerText="❌ Connection error.";
-  }
 
-  btn.disabled=false;
-  btn.innerText="Attach Report";
+  } catch(err) {
+    message.style.color = "red";
+    message.innerText = "❌ Error connecting to server.";
+  }
 });
 </script>
 
