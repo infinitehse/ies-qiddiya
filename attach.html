@@ -203,8 +203,8 @@ button:disabled {
 
     <div class="section">
       <div class="section-title">Weekly Inspection</div>
-      <label for="monthlyLink">Enter Mobile Lab Report Link</label>
-      <input type="url" id="monthlyLink" name="monthlyLink" placeholder="https://docs.google.com/..." required>
+      <label for="weeklyinspectionLink">Enter Weekly Inspection Report Link</label>
+      <input type="url" id="weeklyinspectionLink" name="weeklyinspectionLink" placeholder="https://docs.google.com/..." required>
     </div>
     
     <button type="submit">Submit</button>
@@ -241,11 +241,11 @@ document.getElementById("linkForm").addEventListener("submit", async function(e)
     noiseLink: document.getElementById("noiseLink").value,
     pmLink: document.getElementById("pmLink").value,
     mobileLink: document.getElementById("mobileLink").value
-    monthlyLink: document.getElementById("monthlyLink").value
+    weeklyinspectionLink: document.getElementById("weeklyinspectionLink").value
   };
 
   try {
-    const response = await fetch("https://script.google.com/macros/s/AKfycbzo87cKR-mgqKIQ6n9_niYPn82gaFAUXDNFDuts7Cv5y-sBd62cJh-bZUE7G4TPVqUHRw/exec", {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbw4bTqWlvL-oiOmZ_hb2IUifc3Sy9Die4cjavh2DyXGzpGdAj2Cd4fHfB3ZbblQlu7XHg/exec", {
       method: "POST",
       body: JSON.stringify(data)
     });
