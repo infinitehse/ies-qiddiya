@@ -200,6 +200,12 @@ button:disabled {
       <label for="mobileLink">Enter Mobile Lab Report Link</label>
       <input type="url" id="mobileLink" name="mobileLink" placeholder="https://docs.google.com/..." required>
     </div>
+
+    <div class="section">
+      <div class="section-title">Weekly Inspection</div>
+      <label for="monthlyLink">Enter Mobile Lab Report Link</label>
+      <input type="url" id="monthlyLink" name="monthlyLink" placeholder="https://docs.google.com/..." required>
+    </div>
     
     <button type="submit">Submit</button>
     <div class="message" id="formMessage"></div>
@@ -235,6 +241,7 @@ document.getElementById("linkForm").addEventListener("submit", async function(e)
     noiseLink: document.getElementById("noiseLink").value,
     pmLink: document.getElementById("pmLink").value,
     mobileLink: document.getElementById("mobileLink").value
+    monthlyLink: document.getElementById("monthlyLink").value
   };
 
   try {
