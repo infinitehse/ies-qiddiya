@@ -210,13 +210,22 @@ function updateLocation() {
         const p = detectPoint(latitude, longitude);
         document.getElementById("point").value = p ? p.id : "Unknown Point";
 
-        document.getElementById("locationInfo").innerText =
-          p ? `📍 ${p.id} detected` : "⚠️ Unknown location";
+        document.getElementById("locationInfo").innerText = p
+          ? `📍 ${p.id} detected`
+          : `⚠️ Unknown location (${latitude.toFixed(5)}, ${longitude.toFixed(5)})`;
 
         resolve();
       },
-      reject,
-      { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+      () => {
+        document.getElementById("locationInfo").innerText =
+          "⚠️ Location not available";
+        reject();
+      },
+      {
+        enableHighAccuracy: true,
+        maximumAge: 0,
+        timeout: 10000
+      }
     );
   });
 }
