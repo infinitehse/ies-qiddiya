@@ -194,7 +194,20 @@ function getDistance(lat1, lon1, lat2, lon2) {
 }
 
 function detectPoint(lat, lng) {
-  return points.find(p => getDistance(lat,lng,p.lat,p.lng) <= 50) || null;
+  let nearest = null;
+  let minDist = Infinity;
+
+  for (let p of points) {
+    const d = getDistance(lat, lng, p.lat, p.lng);
+    if (d < minDist) {
+      minDist = d;
+      nearest = p;
+    }
+  }
+
+  // Max distance threshold (meters)
+  if (minDist > 100) return null; // too far → Unknown
+  return nearest;
 }
 
 /* 🔑 FORCE LOCATION UPDATE FUNCTION */
