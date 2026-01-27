@@ -194,7 +194,7 @@ function getDistance(lat1, lon1, lat2, lon2) {
 }
 
 function detectPoint(lat, lng) {
-  return points.find(p => getDistance(lat,lng,p.lat,p.lng) <= 20) || null;
+  return points.find(p => getDistance(lat,lng,p.lat,p.lng) <= 50) || null;
 }
 
 /* 🔑 FORCE LOCATION UPDATE FUNCTION */
