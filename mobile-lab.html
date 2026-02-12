@@ -299,7 +299,7 @@ document.getElementById("airForm").addEventListener("submit", async (e) => {
   const data = Object.fromEntries(new FormData(airForm).entries());
 
   try {
-    const res = await fetch("YOUR_GOOGLE_APPS_SCRIPT_URL", {
+    const res = await fetch("https://script.google.com/macros/s/AKfycbxbMNoLDwj88frO5xig_-D0fxruGGWuDxqKLV3RRXBpuLoSch6yXrkghi9j9BvAfKZzZw/exec", {
       method: "POST",
       body: JSON.stringify(data)
     });
