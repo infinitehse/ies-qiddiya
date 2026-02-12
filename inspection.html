@@ -206,7 +206,7 @@ function detectPoint(lat, lng) {
   }
 
   // Max distance threshold (meters)
-  if (minDist > 100) return null; // too far → Unknown
+  if (minDist > 500) return null; // too far → Unknown
   return nearest;
 }
 
